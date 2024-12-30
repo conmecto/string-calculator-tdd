@@ -39,4 +39,8 @@ describe('StringCalculator', () => {
     test('should ignore numbers greater than 1000', () => {
         expect(calculator.add('1000,2,1001,3')).toBe(1005);
     });
+    
+    test('should return sum for custom delimiters longer than length 1', () => {
+        expect(calculator.add('//[***]\n1***2***3')).toBe(6);
+    });
 });
