@@ -1,0 +1,5 @@
+class StringCalculator  {
+    
+}
+
+export { StringCalculator }
