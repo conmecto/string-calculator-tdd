@@ -12,6 +12,7 @@ class StringCalculator  {
             numbers = parsedNumbersResponse.parsedNumbers;
         }
         const splittedNumbers = this.splitNumbers(numbers, delimiters);
+        this.checkNegatives(splittedNumbers);
         const sum = splittedNumbers.reduce((tempSum: number, n: string) => tempSum + Number(n), 0);
         return sum;
     }
@@ -20,9 +21,9 @@ class StringCalculator  {
         if (!numbers.startsWith(StringCalculator.CUSTOM_DELIMITER_START)) {
             return undefined;
         }
-        const delimiterEnd = numbers.indexOf('\n');
-        const customDelimiter = numbers.substring(2, delimiterEnd+1);
-        const parsedNumbers = numbers.substring(delimiterEnd+1);
+        const newLineStart = numbers.indexOf('\n');
+        const customDelimiter = numbers.substring(2, newLineStart);
+        const parsedNumbers = numbers.substring(newLineStart + 1);
         return {
             customDelimiter,
             parsedNumbers
@@ -33,6 +34,16 @@ class StringCalculator  {
         const regexString = delimiters.map(d => `$${d}`).join('')
         const delimiterRegex = new RegExp(`[${regexString}]`);
         return numbers.split(delimiterRegex);
+    }
+
+    private checkNegatives(numbers: string[]): void {
+        const negatives = numbers
+            .map(num => parseInt(num))
+            .filter(num => num < 0);
+
+        if (negatives.length > 0) {
+            throw new Error(`Negatives not allowed: ${negatives.join(', ')}`);
+        }
     }
 }
 
