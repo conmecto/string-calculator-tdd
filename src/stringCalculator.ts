@@ -4,7 +4,7 @@ class StringCalculator  {
         if (!numbers) {
             return 0;
         }
-        return undefined;
+        return Number(numbers);
     }
     
 }
