@@ -22,4 +22,8 @@ describe('StringCalculator', () => {
     test('should return sum of multiple numbers', () => {
         expect(calculator.add('1,2,3,4,5')).toBe(15);
     });
+
+    test('should handle newline as delimiter', () => {
+        expect(calculator.add('1\n2,3')).toBe(6);
+    });
 });
