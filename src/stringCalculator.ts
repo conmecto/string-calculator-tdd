@@ -13,7 +13,10 @@ class StringCalculator  {
         }
         const splittedNumbers = this.splitNumbers(numbers, delimiters);
         this.checkNegatives(splittedNumbers);
-        const sum = splittedNumbers.reduce((tempSum: number, n: string) => tempSum + Number(n), 0);
+        const sum = splittedNumbers
+            .map(num => parseInt(num))
+            .filter(num => num <= 1000)
+            .reduce((tempSum: number, n: number) => tempSum + n, 0);
         return sum;
     }
 
