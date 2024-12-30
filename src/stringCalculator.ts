@@ -4,11 +4,7 @@ class StringCalculator  {
         if (!numbers) {
             return 0;
         }
-        const numbersArr = numbers.split(',').map(n => Number(n));
-        let sum = numbersArr[0];
-        if (numbersArr.length === 2) {
-            sum += numbersArr[1];
-        }
+        const sum = numbers.split(',').reduce((sum: number, n: string) => sum + Number(n), 0);
         return sum;
     }
     
