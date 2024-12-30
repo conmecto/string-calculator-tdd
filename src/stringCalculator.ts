@@ -4,7 +4,12 @@ class StringCalculator  {
         if (!numbers) {
             return 0;
         }
-        return Number(numbers);
+        const numbersArr = numbers.split(',').map(n => Number(n));
+        let sum = numbersArr[0];
+        if (numbersArr.length === 2) {
+            sum += numbersArr[1];
+        }
+        return sum;
     }
     
 }
