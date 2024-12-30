@@ -7,8 +7,8 @@ class StringCalculator  {
         }
         const delimiters = [',', '\n'];
         const parsedNumbersResponse = this.parseNumbers(numbers);
-        if (parsedNumbersResponse?.customDelimiter) {
-            delimiters.push(parsedNumbersResponse.customDelimiter);
+        if (parsedNumbersResponse?.customDelimiters) {
+            delimiters.push(...parsedNumbersResponse.customDelimiters);
             numbers = parsedNumbersResponse.parsedNumbers;
         }
         const splittedNumbers = this.splitNumbers(numbers, delimiters);
@@ -20,21 +20,20 @@ class StringCalculator  {
         return sum;
     }
 
-    private parseNumbers(numbers: string): { customDelimiter: string, parsedNumbers: string } | undefined {
+    private parseNumbers(numbers: string): { customDelimiters: string[], parsedNumbers: string } | undefined {
         if (!numbers.startsWith(StringCalculator.CUSTOM_DELIMITER_START)) {
             return undefined;
         }
         const newLineStart = numbers.indexOf('\n');
         const customDelimiterSubstring = numbers.substring(2, newLineStart);
-        let customDelimiter = '';
-        if (customDelimiterSubstring.length >= 3) {
-            customDelimiter = customDelimiterSubstring.substring(1, customDelimiterSubstring.length-1)
-        } else {
-            customDelimiter = numbers.substring(2, newLineStart);
-        }
+        const customDelimiters = customDelimiterSubstring
+            .replaceAll(']', ' ')
+            .replaceAll('[', ' ')
+            .split(' ')
+            .filter(c => c != '');
         const parsedNumbers = numbers.substring(newLineStart + 1);
         return {
-            customDelimiter,
+            customDelimiters,
             parsedNumbers
         }
     }
