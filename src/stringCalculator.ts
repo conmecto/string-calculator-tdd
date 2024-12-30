@@ -25,7 +25,13 @@ class StringCalculator  {
             return undefined;
         }
         const newLineStart = numbers.indexOf('\n');
-        const customDelimiter = numbers.substring(2, newLineStart);
+        const customDelimiterSubstring = numbers.substring(2, newLineStart);
+        let customDelimiter = '';
+        if (customDelimiterSubstring.length >= 3) {
+            customDelimiter = customDelimiterSubstring.substring(1, customDelimiterSubstring.length-1)
+        } else {
+            customDelimiter = numbers.substring(2, newLineStart);
+        }
         const parsedNumbers = numbers.substring(newLineStart + 1);
         return {
             customDelimiter,
