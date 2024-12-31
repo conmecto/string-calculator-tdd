@@ -1,23 +1,45 @@
 class StringCalculator  {
-    private static readonly CUSTOM_DELIMITER_START = '//'; 
+    private static readonly CUSTOM_DELIMITER_START = '//';
+    private static readonly DEFAULT_DELIMITER = ',';
+    private static readonly NEW_LINE = '\n'; 
 
     add(numbers: string): number {
         if (!numbers) {
             return 0;
         }
-        const delimiters = [',', '\n'];
+        let delimiters = [];
+        let checkSingleStarPattern = false;
         const parsedNumbersResponse = this.parseNumbers(numbers);
         if (parsedNumbersResponse?.customDelimiters) {
-            delimiters.push(...parsedNumbersResponse.customDelimiters);
+            delimiters = parsedNumbersResponse.customDelimiters;
             numbers = parsedNumbersResponse.parsedNumbers;
+            checkSingleStarPattern = this.checkSingleStarPattern(delimiters);
+        } else {
+            delimiters = [StringCalculator.DEFAULT_DELIMITER, StringCalculator.NEW_LINE];
         }
         const splittedNumbers = this.splitNumbers(numbers, delimiters);
-        this.checkNegatives(splittedNumbers);
-        const sum = splittedNumbers
-            .map(num => parseInt(num))
+        const intParsedNumbers = splittedNumbers.map(num => parseInt(num));
+        this.checkNegatives(intParsedNumbers);
+        if (checkSingleStarPattern) {
+            return this.multiply(intParsedNumbers);
+        }
+        const sum = intParsedNumbers
             .filter(num => num <= 1000)
             .reduce((tempSum: number, n: number) => tempSum + n, 0);
         return sum;
+    }
+
+    private multiply(numbers: number[]) {
+        const product = numbers
+            .reduce((product: number, n: number) => product * n, 1);
+        return product;
+    }
+
+    private checkSingleStarPattern(delimiters: string[]) {
+        if (delimiters[0] === '*' && delimiters.length === 1) {
+            return true;
+        }
+        return false;
     }
 
     private parseNumbers(numbers: string): { customDelimiters: string[], parsedNumbers: string } | undefined {
@@ -44,9 +66,8 @@ class StringCalculator  {
         return numbers.split(delimiterRegex);
     }
 
-    private checkNegatives(numbers: string[]): void {
+    private checkNegatives(numbers: number[]): void {
         const negatives = numbers
-            .map(num => parseInt(num))
             .filter(num => num < 0);
 
         if (negatives.length > 0) {
