@@ -51,4 +51,8 @@ describe('StringCalculator', () => {
     test('should return sum for multiple custom delimiters longer than length 1', () => {
         expect(calculator.add('//[***][%%]\n1***2%%3')).toBe(6);
     });
+
+    test('should multiply numbers with * as custom delimiter', () => {
+        expect(calculator.add('//*\n2*3')).toBe(6);
+    });
 });
