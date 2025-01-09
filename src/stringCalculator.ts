@@ -3,10 +3,30 @@ class StringCalculator  {
     private static readonly DEFAULT_DELIMITER = ',';
     private static readonly NEW_LINE = '\n'; 
 
-    add(numbers: string): number {
-        if (!numbers) {
+    solve(numbers: string): number {
+        if (!this.baseCondition(numbers)) {
             return 0;
         }
+        const parsedObj = this.getParsedNumbersAndDelimiter(numbers);
+        numbers = parsedObj.numbers;
+        const delimiters = parsedObj.delimiters;
+        const splittedNumbers = this.splitNumbers(numbers, delimiters);
+        const intParsedNumbers = splittedNumbers.map(num => parseInt(num));
+        this.checkNegatives(intParsedNumbers);
+        if (parsedObj.checkSingleStarPattern) {
+            return this.multiply(intParsedNumbers);
+        }
+        return this.add(intParsedNumbers);
+    }
+
+    private baseCondition(numbers: string) {
+        if (!numbers) {
+            return false;
+        }
+        return true;
+    }
+
+    private getParsedNumbersAndDelimiter(numbers: string) {
         let delimiters = [];
         let checkSingleStarPattern = false;
         const parsedNumbersResponse = this.parseNumbers(numbers);
@@ -17,13 +37,15 @@ class StringCalculator  {
         } else {
             delimiters = [StringCalculator.DEFAULT_DELIMITER, StringCalculator.NEW_LINE];
         }
-        const splittedNumbers = this.splitNumbers(numbers, delimiters);
-        const intParsedNumbers = splittedNumbers.map(num => parseInt(num));
-        this.checkNegatives(intParsedNumbers);
-        if (checkSingleStarPattern) {
-            return this.multiply(intParsedNumbers);
+        return {
+            numbers,
+            delimiters,
+            checkSingleStarPattern
         }
-        const sum = intParsedNumbers
+    }
+
+    private add(numbers: number[]): number {        
+        const sum = numbers
             .filter(num => num <= 1000)
             .reduce((tempSum: number, n: number) => tempSum + n, 0);
         return sum;
