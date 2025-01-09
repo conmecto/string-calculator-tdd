@@ -1,12 +1,20 @@
+import { StringDb } from "./stringDb";
+
 class StringCalculator  {
     private static readonly CUSTOM_DELIMITER_START = '//';
     private static readonly DEFAULT_DELIMITER = ',';
     private static readonly NEW_LINE = '\n'; 
+    private stringDb: StringDb;
+
+    constructor(stringDb: StringDb) {
+        this.stringDb = stringDb;
+    }
 
     solve(numbers: string): number {
         if (!this.baseCondition(numbers)) {
             return 0;
         }
+        let result: number;
         const parsedObj = this.getParsedNumbersAndDelimiter(numbers);
         numbers = parsedObj.numbers;
         const delimiters = parsedObj.delimiters;
@@ -14,9 +22,12 @@ class StringCalculator  {
         const intParsedNumbers = splittedNumbers.map(num => parseInt(num));
         this.checkNegatives(intParsedNumbers);
         if (parsedObj.checkSingleStarPattern) {
-            return this.multiply(intParsedNumbers);
+            result = this.multiply(intParsedNumbers);
+        } else {
+            result = this.add(intParsedNumbers);
         }
-        return this.add(intParsedNumbers);
+        this.stringDb.save(numbers, result)
+        return result;
     }
 
     private baseCondition(numbers: string) {

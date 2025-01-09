@@ -1,10 +1,13 @@
 import { StringCalculator } from './stringCalculator';
+import { StringDb } from './stringDb';
 
 describe('StringCalculator', () => {
     let calculator: StringCalculator;
+    let stringDb: StringDb;
 
     beforeEach(() => {
-        calculator = new StringCalculator();
+        stringDb = new StringDb();
+        calculator = new StringCalculator(stringDb);
     });
 
     test('should return 0 for an empty string', () => {
